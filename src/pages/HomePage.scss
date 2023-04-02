@@ -1,0 +1,62 @@
+@import "../SCSSVARS.scss";
+
+.main {
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.form-main {
+  width: 80%;
+  border: 0.375px solid lightgray;
+  border-radius: 0.375rem;
+  margin: 1rem;
+  padding: 1.2rem;
+}
+
+.form-row,
+.submit-btn {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#datepicker input {
+  border-color: lightgray;
+  border: 1px solid lightgray;
+  border-radius: $bootstrap-input-default-border-radius;
+  padding-left: 0.5rem;
+  padding-top: $bootstrap-input-default-y-padding;
+  padding-bottom: $bootstrap-input-default-y-padding;
+}
+
+.submit-btn {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-flow: column;
+  }
+
+  .react-datepicker {
+    width: 95% !important;
+    margin: auto !important;
+  }
+  .react-datepicker__month-container {
+    // background-color: black !important;
+    width: 76% !important;
+  }
+  .react-datepicker__time-container {
+    width: 24% !important;
+  }
+  .react-datepicker__week::after {
+    margin: 0px !important;
+  }
+  //   .react-datepicker-popper {
+  //     align-items: center !important;
+  //   }
+  .react-datepicker__time-list-item {
+    padding-left: 2px !important;
+  }
+}

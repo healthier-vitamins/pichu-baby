@@ -1,0 +1,18 @@
+const GLOBALVARS: any = {};
+GLOBALVARS.MEAL_TYPE = ["FOOD", "MEDICINE", "WATER"];
+GLOBALVARS.AMOUNT = [
+  "NA",
+  "3 CARROT",
+  "2 CARROT",
+  "1 CARROT",
+  "4/4 CUP",
+  "3/4 CUP",
+  "2/4 CUP",
+  "1/4 CUP",
+  "250 ML",
+  "500 ML",
+];
+GLOBALVARS.STATUS_LIVE = "LIVE";
+GLOBALVARS.STATUS_DELETED = "DELETED";
+
+export default GLOBALVARS;
