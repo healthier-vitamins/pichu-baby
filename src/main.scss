@@ -1,0 +1,18 @@
+//! https://stackoverflow.com/questions/54227537/change-bootstrap-4-text-colors
+
+// Required
+@import "../node_modules/bootstrap/scss/functions";
+@import "./variables.scss";
+// @import "../node_modules/bootstrap/scss/variables";
+
+// Default variable overrides
+// $body-color: $web-default-color;
+
+// Required
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
