@@ -1,8 +1,9 @@
 import "./HomePage.scss";
 import { Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
-import { createRef, RefObject, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import GLOBALVARS from "../utils/GLOBALVARS";
+import { Spinner } from "react-bootstrap";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { axiosTo } from "utils/promise";
@@ -11,12 +12,13 @@ import axios from "axios";
 function HomePage() {
   const [startDate, setStartDate] = useState(new Date());
   const [isSubmited, setIsSubmited] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   type Payload = {
-    MEAL_TYPE: RefObject<string>;
-    AMOUNT: RefObject<string>;
-    DATE_TIME: Date | null;
-    TITLE: RefObject<string>;
+    MEAL_TYPE: any;
+    AMOUNT: any;
+    DATE_TIME: any;
+    TITLE: any;
   };
 
   // const refInitialState: RefInitialState = useMemo(() => {
@@ -28,58 +30,69 @@ function HomePage() {
   //   };
   // }, []);
 
-  const refMealType = createRef<any>();
-  const refAmount = createRef<any>();
-
+  const refMealType = useRef<any>();
+  const refAmount = useRef<any>();
+  const [formData, setFormData] = useState<Payload>({
+    AMOUNT: GLOBALVARS.AMOUNT[0],
+    DATE_TIME: undefined,
+    MEAL_TYPE: GLOBALVARS.MEAL_TYPE[0],
+    TITLE: GLOBALVARS.MEAL_TYPE[0],
+  });
   // function filterDate(date: Date) {
   //   if (moment(date).isBefore(moment(startDate))) {
-  //     // if (date.getTime() < startDate.getTime()) {/
+  //     // if (date.getTime() < startDate.getsTime()) {/
   //     return false;
   //   }
   //   return true;
   // }
 
-  function isAnyObjValueEmpty(obj: any) {
-    const keys = Object.keys(obj);
-    for (let key of keys) {
-      if (obj[key] === null) return true;
-    }
-    return false;
-  }
+  // function isAnyObjValueEmpty(obj: any) {
+  //   const keys = Object.keys(obj);
+  //   for (let key of keys) {
+  //     if (obj[key] === null) return true;
+  //   }
+  //   return false;
+  // }
 
   async function postEntry(payload: any) {
-    setIsSubmited(false);
     const [err, res] = await axiosTo(axios.post("api/postEntry", payload));
     console.log("lol", err, res);
     if (err) {
+      setIsSubmited(false);
+      setIsLoading(false);
       alert("Something went wrong.");
       return;
     }
     if (res) {
-      alert("Successfully added.");
-    } else {
-      alert("Some fields are empty.");
       setIsSubmited(false);
+      setIsLoading(false);
+      alert("Successfully added.");
     }
   }
 
   useEffect(() => {
+    if (!isSubmited) setIsLoading(true);
+  }, [isSubmited]);
+
+  useEffect(() => {
     if (isSubmited) {
-      if (refMealType.current.value === null)
-        refMealType.current.value = GLOBALVARS.MEAL_TYPE[0];
-      if (refAmount.current.value === null)
-        refAmount.current.value = GLOBALVARS.AMOUNT[0];
+      console.log(
+        "refs ||||||| ",
+        refAmount.current.value,
+        refMealType.current.value
+      );
       const payload: Payload = {
         AMOUNT: refAmount.current.value,
         DATE_TIME: startDate,
         MEAL_TYPE: refMealType.current.value,
         TITLE: refMealType.current.value,
       };
-      if (!isAnyObjValueEmpty(payload)) {
-        postEntry(payload);
-      }
+      // console.log(startDate);
+      // setFormData({ ...formData, DATE_TIME: startDate });
+      // console.log(formData);
+      postEntry(payload);
     }
-  }, [isSubmited, startDate, refAmount, refMealType]);
+  }, [isSubmited, startDate]);
 
   const RenderMainForm: Function = (): React.ReactElement => {
     return (
@@ -101,21 +114,27 @@ function HomePage() {
             </Form.Group>
             <Form.Group>
               <Form.Label>Meal Type:&nbsp;</Form.Label>
-              <Form.Select
+              <Form.Control
+                as={"select"}
                 size="sm"
                 ref={refMealType}
                 onChange={(e) => {
-                  refMealType.current.value = e.target.value;
+                  setFormData({
+                    ...formData,
+                    MEAL_TYPE: e.target.value,
+                    TITLE: formData.MEAL_TYPE,
+                  });
                 }}
+                value={formData.MEAL_TYPE}
               >
                 {GLOBALVARS.MEAL_TYPE.map((type: string, index: number) => {
                   return (
-                    <option key={index} value={type} defaultChecked>
+                    <option key={index} value={type}>
                       {type}
                     </option>
                   );
                 })}
-              </Form.Select>
+              </Form.Control>
             </Form.Group>
             <Form.Group>
               <Form.Label>Amount:&nbsp;</Form.Label>
@@ -123,8 +142,9 @@ function HomePage() {
                 size="sm"
                 ref={refAmount}
                 onChange={(e) => {
-                  refAmount.current.value = e.target.value;
+                  setFormData({ ...formData, AMOUNT: e.target.value });
                 }}
+                value={formData.AMOUNT}
               >
                 {GLOBALVARS.AMOUNT.map((amnt: string, index: number) => {
                   return (
@@ -137,8 +157,18 @@ function HomePage() {
             </Form.Group>
           </div>
         </Form>
-        <div className="submit-btn">
-          <button onClick={() => setIsSubmited(true)}>Submit</button>
+        <>{console.log(isSubmited, isLoading)}</>
+        <div className="submit-btn-container">
+          <button className="submit-btn" onClick={() => setIsSubmited(true)}>
+            {isSubmited && isLoading && (
+              <Spinner
+                size="sm"
+                variant="light"
+                className="submit-spinner"
+              ></Spinner>
+            )}
+            Submit
+          </button>
         </div>
       </div>
     );

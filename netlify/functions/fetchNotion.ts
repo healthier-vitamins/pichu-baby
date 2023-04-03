@@ -10,7 +10,7 @@ exports.handler = async function (event, context) {
   try {
     // const response = await notion.blocks.children.list({
     const response = await notion.databases.retrieve({
-      database_id: "c00f02139afa424abcba51c236327fd9",
+      database_id: "35904e9a-825d-4aa2-addc-dd1a8f46b198",
     });
     return {
       statusCode: 200,

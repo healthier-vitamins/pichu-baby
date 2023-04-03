@@ -30,8 +30,27 @@
   padding-bottom: $bootstrap-input-default-y-padding;
 }
 
-.submit-btn {
+.submit-btn-container {
+  display: flex;
+  justify-content: center;
   margin-top: 1rem;
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  border: 0.375px solid lightgray;
+  border-radius: $bootstrap-input-default-border-radius;
+  padding-top: $bootstrap-input-default-y-padding;
+  padding-bottom: $bootstrap-input-default-y-padding;
+  background-color: rgb(112, 180, 211);
+  //   background-color: $primary-color;
+  color: white;
+  font-weight: 600;
+}
+
+.submit-spinner {
+  margin-right: 0.3rem;
 }
 
 @media (max-width: 768px) {
