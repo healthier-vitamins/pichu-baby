@@ -7,41 +7,38 @@ import { Spinner } from "react-bootstrap";
 import pichu from "../assets/pichu3.png";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { axiosTo } from "utils/promise";
-import axios from "axios";
+
+import { getEntryDbIdAndUrl, postEntry } from "utils/apis/apis";
 
 function HomePage() {
   const [startDate, setStartDate] = useState(new Date());
   const [isSubmited, setIsSubmited] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [dateUrl, setDateUrl] = useState("");
 
   type Payload = {
     MEAL_TYPE: any;
     AMOUNT: any;
     DATE_TIME: any;
     TITLE: any;
+    OTHER_AMOUNT: string;
+    OTHER_MEAL_TYPE: string;
   };
 
-  // const refInitialState: RefInitialState = useMemo(() => {
-  //   return {
-  //     MEAL_TYPE: null,
-  //     AMOUNT: null,
-  //     DATE_TIME: null,
-  //     TITLE: null,
-  //   };
-  // }, []);
-
   const refMealType = useRef<any>();
+  const refOtherMealType = useRef<any>();
   const refAmount = useRef<any>();
+  const refOtherAmount = useRef<any>();
   const [formData, setFormData] = useState<Payload>({
-    AMOUNT: GLOBALVARS.AMOUNT[0],
+    AMOUNT: GLOBALVARS.AMOUNT_FOOD[0],
     DATE_TIME: undefined,
     MEAL_TYPE: GLOBALVARS.MEAL_TYPE[0],
     TITLE: GLOBALVARS.MEAL_TYPE[0],
+    OTHER_AMOUNT: "",
+    OTHER_MEAL_TYPE: "",
   });
   // function filterDate(date: Date) {
   //   if (moment(date).isBefore(moment(startDate))) {
-  //     // if (date.getTime() < startDate.getsTime()) {/
   //     return false;
   //   }
   //   return true;
@@ -55,20 +52,37 @@ function HomePage() {
   //   return false;
   // }
 
-  async function postEntry(payload: any) {
-    const [err, res] = await axiosTo(axios.post("api/postEntry", payload));
-    console.log("lol", err, res);
-    if (err) {
-      setIsSubmited(false);
-      setIsLoading(false);
-      alert("Something went wrong.");
-      return;
-    }
-    if (res) {
+  async function handlePostEntry(payload: any) {
+    function succFunc() {
       setIsSubmited(false);
       setIsLoading(false);
       alert("Successfully added.");
+      setFormData({
+        AMOUNT: GLOBALVARS.AMOUNT_FOOD[0],
+        DATE_TIME: undefined,
+        MEAL_TYPE: GLOBALVARS.MEAL_TYPE[0],
+        TITLE: GLOBALVARS.MEAL_TYPE[0],
+        OTHER_AMOUNT: "",
+        OTHER_MEAL_TYPE: "",
+      });
     }
+
+    function errFunc() {
+      setIsSubmited(false);
+      setIsLoading(false);
+      alert(GLOBALVARS.ERR_MSG_POSTING_ENTRY);
+      return;
+    }
+    postEntry(succFunc, errFunc, payload);
+  }
+
+  useEffect(() => {
+    handleGetentryDbId();
+  }, []);
+
+  async function handleGetentryDbId() {
+    const { [GLOBALVARS.DATE_PAGE_URL]: url } = await getEntryDbIdAndUrl();
+    setDateUrl(url);
   }
 
   useEffect(() => {
@@ -77,25 +91,25 @@ function HomePage() {
 
   useEffect(() => {
     if (isSubmited) {
-      console.log(
-        "refs ||||||| ",
-        refAmount.current.value,
-        refMealType.current.value
-      );
+      // console.log(
+      //   "refs ||||||| ",
+      //   refAmount.current.value,
+      //   refMealType.current.value
+      // );
       const payload: Payload = {
-        AMOUNT: refAmount.current.value,
+        AMOUNT: refAmount.current?.value.toUpperCase(),
         DATE_TIME: startDate,
-        MEAL_TYPE: refMealType.current.value,
-        TITLE: refMealType.current.value,
+        MEAL_TYPE: refMealType.current.value.toUpperCase(),
+        TITLE: refMealType.current.value.toUpperCase(),
+        OTHER_AMOUNT: refOtherAmount.current?.value.toUpperCase(),
+        OTHER_MEAL_TYPE: refOtherMealType.current?.value.toUpperCase(),
       };
-      // console.log(startDate);
-      // setFormData({ ...formData, DATE_TIME: startDate });
-      // console.log(formData);
-      postEntry(payload);
+      console.log(payload);
+      handlePostEntry(payload);
     }
   }, [isSubmited, startDate]);
 
-  const RenderMainForm: Function = (): React.ReactElement => {
+  const renderMainForm: Function = (): React.ReactElement => {
     return (
       <div className="form-main">
         <Form>
@@ -116,8 +130,7 @@ function HomePage() {
               </Form.Group>
               <Form.Group>
                 <Form.Label>Meal Type:&nbsp;</Form.Label>
-                <Form.Control
-                  as={"select"}
+                <Form.Select
                   size="sm"
                   ref={refMealType}
                   onChange={(e) => {
@@ -136,34 +149,89 @@ function HomePage() {
                       </option>
                     );
                   })}
-                </Form.Control>
+                </Form.Select>
+                {refMealType.current?.value === "OTHERS" && (
+                  <Form.Control
+                    className="others-control"
+                    size="sm"
+                    placeholder="Enter other meal type"
+                    ref={refOtherMealType}
+                    value={formData.OTHER_MEAL_TYPE}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        OTHER_MEAL_TYPE: e.target.value,
+                      })
+                    }
+                  ></Form.Control>
+                )}
               </Form.Group>
               <Form.Group>
                 <Form.Label>Amount:&nbsp;</Form.Label>
-                <Form.Select
-                  size="sm"
-                  ref={refAmount}
-                  onChange={(e) => {
-                    setFormData({ ...formData, AMOUNT: e.target.value });
-                  }}
-                  value={formData.AMOUNT}
-                >
-                  {GLOBALVARS.AMOUNT.map((amnt: string, index: number) => {
-                    return (
-                      <option key={index} value={amnt}>
-                        {amnt}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
+
+                {refMealType.current?.value !== "OTHERS" ? (
+                  <Form.Select
+                    size="sm"
+                    ref={refAmount}
+                    onChange={(e) => {
+                      setFormData({ ...formData, AMOUNT: e.target.value });
+                    }}
+                    value={formData.AMOUNT}
+                  >
+                    {refMealType.current?.value &&
+                      GLOBALVARS[`AMOUNT_${refMealType.current?.value}`].map(
+                        (amnt: string, index: number) => {
+                          return (
+                            <option key={index} value={amnt}>
+                              {amnt}
+                            </option>
+                          );
+                        }
+                      )}
+                  </Form.Select>
+                ) : null}
+                {(refMealType.current?.value === "OTHERS" ||
+                  refAmount.current?.value === "OTHERS") && (
+                  <Form.Control
+                    className={
+                      refAmount.current?.value === "OTHERS"
+                        ? "others-control"
+                        : ""
+                    }
+                    size="sm"
+                    placeholder="Enter other amount"
+                    ref={refOtherAmount}
+                    value={formData.OTHER_AMOUNT}
+                    onChange={(e) =>
+                      setFormData({ ...formData, OTHER_AMOUNT: e.target.value })
+                    }
+                  ></Form.Control>
+                )}
               </Form.Group>
+              <div className="url">
+                {dateUrl === "" ? (
+                  <Spinner
+                    size="sm"
+                    variant="secondary"
+                    className="submit-spinner"
+                  ></Spinner>
+                ) : (
+                  <a href={dateUrl} target="_blank" rel="noopener noreferrer">
+                    Today's entry
+                  </a>
+                )}
+              </div>
             </div>
             <img className="form-image" src={pichu} alt=""></img>
           </div>
         </Form>
-        <>{console.log(isSubmited, isLoading)}</>
+
         <div className="submit-btn-container">
-          <button className="submit-btn" onClick={() => setIsSubmited(true)}>
+          <button
+            className="submit-btn"
+            onClick={() => setIsSubmited(true)}
+            disabled={isSubmited}
+          >
             {isSubmited && isLoading && (
               <Spinner
                 size="sm"
@@ -178,20 +246,7 @@ function HomePage() {
     );
   };
 
-  return (
-    <div className="main">
-      <RenderMainForm></RenderMainForm>
-      <>
-        {/* {console.log(
-          startDate.toLocaleString("en-sg", {
-            hour12: false,
-            timeZone: "Asia/Singapore",
-          })
-        )} */}
-        {/* {console.log(startDate)} */}
-      </>
-    </div>
-  );
+  return <div className="main">{renderMainForm()}</div>;
 }
 
 export default HomePage;

@@ -19,7 +19,7 @@
   display: flex;
   // flex-direction: row;
   justify-content: space-between;
-  gap: 5%
+  gap: 5%;
 }
 
 .form-image {
@@ -30,11 +30,14 @@
   width: 60%;
 }
 
-.form-row,
-.submit-btn {
+.form-row {
   display: flex;
   flex-direction: column;
   // justify-content: space-evenly;
+}
+
+.others-control {
+  margin-top: 0.3rem;
 }
 
 #datepicker input {
@@ -63,44 +66,54 @@
   //   background-color: $primary-color;
   color: white;
   font-weight: 600;
+  font-size: 16px;
 }
 
 .submit-spinner {
   margin-right: 0.3rem;
 }
 
+.url {
+  margin-top: 0.3rem;
+}
+
 @media (max-width: 768px) {
   .form-main {
     width: 85%;
   }
-  
+
   .form-row {
     flex-flow: column;
     z-index: 99;
-    
   }
+
   .form-image {
-    width: 60%;
-    transform: translate(-40%, 10%)
+    width: 68%;
+    transform: translate(-42%, 10%);
   }
 
   .react-datepicker {
     width: 95% !important;
     margin: auto !important;
   }
+
   .react-datepicker__month-container {
     // background-color: black !important;
     width: 76% !important;
   }
+
   .react-datepicker__time-container {
     width: 24% !important;
   }
+
   .react-datepicker__week::after {
     margin: 0px !important;
   }
+
   //   .react-datepicker-popper {
   //     align-items: center !important;
   //   }
+
   .react-datepicker__time-list-item {
     padding-left: 2px !important;
   }
