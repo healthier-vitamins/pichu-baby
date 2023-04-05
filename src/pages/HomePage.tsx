@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import { useEffect, useRef, useState } from "react";
 import GLOBALVARS from "../utils/GLOBALVARS";
 import { Spinner } from "react-bootstrap";
+import pichu from "../assets/pichu3.png";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { axiosTo } from "utils/promise";
@@ -98,63 +99,66 @@ function HomePage() {
     return (
       <div className="form-main">
         <Form>
-          <div className="form-row">
-            <Form.Group>
-              <Form.Label className="form-label">Date:&nbsp;</Form.Label>
-              <div id="datepicker">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date: Date) => setStartDate(date)}
-                  showTimeSelect
-                  timeIntervals={15}
-                  dateFormat="MM/dd/yyyy h:mm aa"
-                  // filterDate={filterDate}
-                ></DatePicker>
-              </div>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Meal Type:&nbsp;</Form.Label>
-              <Form.Control
-                as={"select"}
-                size="sm"
-                ref={refMealType}
-                onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    MEAL_TYPE: e.target.value,
-                    TITLE: formData.MEAL_TYPE,
-                  });
-                }}
-                value={formData.MEAL_TYPE}
-              >
-                {GLOBALVARS.MEAL_TYPE.map((type: string, index: number) => {
-                  return (
-                    <option key={index} value={type}>
-                      {type}
-                    </option>
-                  );
-                })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Amount:&nbsp;</Form.Label>
-              <Form.Select
-                size="sm"
-                ref={refAmount}
-                onChange={(e) => {
-                  setFormData({ ...formData, AMOUNT: e.target.value });
-                }}
-                value={formData.AMOUNT}
-              >
-                {GLOBALVARS.AMOUNT.map((amnt: string, index: number) => {
-                  return (
-                    <option key={index} value={amnt}>
-                      {amnt}
-                    </option>
-                  );
-                })}
-              </Form.Select>
-            </Form.Group>
+          <div className="form-top">
+            <div className="form-row">
+              <Form.Group>
+                <Form.Label className="form-label">Date:&nbsp;</Form.Label>
+                <div id="datepicker">
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date: Date) => setStartDate(date)}
+                    showTimeSelect
+                    timeIntervals={15}
+                    dateFormat="MM/dd/yyyy h:mm aa"
+                    // filterDate={filterDate}
+                  ></DatePicker>
+                </div>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Meal Type:&nbsp;</Form.Label>
+                <Form.Control
+                  as={"select"}
+                  size="sm"
+                  ref={refMealType}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      MEAL_TYPE: e.target.value,
+                      TITLE: formData.MEAL_TYPE,
+                    });
+                  }}
+                  value={formData.MEAL_TYPE}
+                >
+                  {GLOBALVARS.MEAL_TYPE.map((type: string, index: number) => {
+                    return (
+                      <option key={index} value={type}>
+                        {type}
+                      </option>
+                    );
+                  })}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Amount:&nbsp;</Form.Label>
+                <Form.Select
+                  size="sm"
+                  ref={refAmount}
+                  onChange={(e) => {
+                    setFormData({ ...formData, AMOUNT: e.target.value });
+                  }}
+                  value={formData.AMOUNT}
+                >
+                  {GLOBALVARS.AMOUNT.map((amnt: string, index: number) => {
+                    return (
+                      <option key={index} value={amnt}>
+                        {amnt}
+                      </option>
+                    );
+                  })}
+                </Form.Select>
+              </Form.Group>
+            </div>
+            <img className="form-image" src={pichu} alt=""></img>
           </div>
         </Form>
         <>{console.log(isSubmited, isLoading)}</>

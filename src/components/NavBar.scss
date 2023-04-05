@@ -5,13 +5,19 @@
   background-color: rgb(94, 173, 209);
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .navbar-title {
   color: aliceblue;
   font-family: "Roboto";
   letter-spacing: 0.6rem;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 900;
   padding: 0.1rem 0rem 0.1rem 0rem;
+}
+
+.pichu-icon {
+  width: 100px;
+  margin: 10px 20px 10px 20px;
 }
