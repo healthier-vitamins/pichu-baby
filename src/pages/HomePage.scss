@@ -24,6 +24,7 @@
 
 .form-image {
   width: 40%;
+  z-index: -1;
 }
 
 .form-row {
@@ -90,6 +91,7 @@
   .form-image {
     width: 68%;
     transform: translate(-42%, 10%);
+    z-index: -1;
   }
 
   .react-datepicker {
