@@ -3,6 +3,7 @@ import { HttpStatusCode } from "axios";
 import { dateSchema } from "../../src/utils/schemas/dateSchema";
 import { entrySchema } from "../../src/utils/schemas/entrySchema";
 import GLOBALVARS from "../../src/utils/GLOBALVARS";
+import moment from "moment-timezone";
 
 const { NOTION_KEY, NOTION_MAIN_DB_KEY } = process.env;
 const notion = new Client({
@@ -10,10 +11,12 @@ const notion = new Client({
 });
 
 exports.handler = async function (event: any, context: any) {
-  const dateTitle = new Date().toLocaleDateString("en-SG", {
-    hour12: true,
-    timeZone: "Asia/Singapore",
-  });
+  // const dateTitle = new Date().toLocaleDateString("en-SG", {
+  //   hour12: true,
+  //   timeZone: "Asia/Singapore",
+  // });
+  const dateTitle = moment().format("DD/MM/YYYY");
+  // console.log("TIME ZONE |||||| ", moment.tz.guess(true));
 
   let parentId,
     parentUrl,
@@ -135,8 +138,8 @@ exports.handler = async function (event: any, context: any) {
           select: {},
         },
         [entrySchema.DATE_TIME]: {
-          type: "rich_text",
-          rich_text: {},
+          type: "date",
+          date: {},
         },
         [entrySchema.STATUS]: {
           type: "select",

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import GLOBALVARS from "../utils/GLOBALVARS";
 import { Spinner } from "react-bootstrap";
 import pichu from "../assets/pichu3.png";
-
+import moment from "moment-timezone";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { getEntryDbIdAndUrl, postEntry } from "utils/apis/apis";
@@ -77,6 +77,7 @@ function HomePage() {
   }
 
   useEffect(() => {
+    moment.tz.setDefault("Asia/Singapore");
     handleGetentryDbId();
   }, []);
 

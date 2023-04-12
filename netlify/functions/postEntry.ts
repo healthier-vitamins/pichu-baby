@@ -3,7 +3,7 @@ import { HttpStatusCode } from "axios";
 import { dateSchema } from "../../src/utils/schemas/dateSchema";
 import { entrySchema } from "../../src/utils/schemas/entrySchema";
 // import { dateSchema } from "../../src/utils/schemas/dateSchema";
-const moment = require("moment");
+import moment from "moment-timezone";
 
 const { NOTION_KEY, NOTION_MAIN_DB_KEY } = process.env;
 const notion = new Client({
@@ -23,22 +23,24 @@ exports.handler = async function (event: any, context: any) {
   MEAL_TYPE = OTHER_MEAL_TYPE ? OTHER_MEAL_TYPE : MEAL_TYPE;
   AMOUNT = OTHER_AMOUNT ? OTHER_AMOUNT : AMOUNT;
 
-  const dateTitle = new Date(DATE_TIME).toLocaleDateString("en-SG", {
-    hour12: true,
-    timeZone: "Asia/Singapore",
-  });
+  // const dateTitle = new Date(DATE_TIME).toLocaleDateString("en-SG", {
+  //   hour12: true,
+  //   timeZone: "Asia/Singapore",
+  // });
+  const dateTitle = moment(DATE_TIME).format("DD/MM/YYYY");
 
-  const dateEntry = new Date(DATE_TIME).toLocaleDateString("en-SG", {
-    hour12: true,
-    timeZone: "Asia/Singapore",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-  const finalDate = moment(dateEntry).format("MMMM Do YYYY, h:mm:ss a");
+  // const dateEntry = new Date(DATE_TIME).toLocaleDateString("en-SG", {
+  //   hour12: true,
+  //   timeZone: "Asia/Singapore",
+  //   year: "numeric",
+  //   month: "numeric",
+  //   day: "numeric",
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  //   second: "2-digit",
+  // });
+  const dateEntry = moment(DATE_TIME).toISOString(true);
+  // const finalDate = moment(dateEntry).format("MMMM Do YYYY, h:mm:ss a");
   //   const parsedDate = new Date(Date.parse(DATE_TIME))
 
   let parentId, entryId;
@@ -148,8 +150,8 @@ exports.handler = async function (event: any, context: any) {
             select: {},
           },
           [entrySchema.DATE_TIME]: {
-            type: "rich_text",
-            rich_text: {},
+            type: "date",
+            date: {},
           },
           [entrySchema.STATUS]: {
             type: "select",
@@ -203,13 +205,9 @@ exports.handler = async function (event: any, context: any) {
           },
         },
         [entrySchema.DATE_TIME]: {
-          rich_text: [
-            {
-              text: {
-                content: finalDate,
-              },
-            },
-          ],
+          date: {
+            start: dateEntry,
+          },
         },
         [entrySchema.MEAL_TYPE]: {
           select: {

@@ -18,6 +18,7 @@
     "gotrue-js": "^0.9.29",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "notion-types": "^6.16.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
