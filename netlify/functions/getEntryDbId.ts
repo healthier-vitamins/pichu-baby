@@ -15,6 +15,7 @@ exports.handler = async function (event: any, context: any) {
   //   hour12: true,
   //   timeZone: "Asia/Singapore",
   // });
+  moment.tz.setDefault("Asia/Singapore");
   const dateTitle = moment().format("DD/MM/YYYY");
   // console.log("TIME ZONE |||||| ", moment.tz.guess(true));
 

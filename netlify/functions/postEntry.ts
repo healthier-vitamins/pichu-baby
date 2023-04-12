@@ -27,6 +27,7 @@ exports.handler = async function (event: any, context: any) {
   //   hour12: true,
   //   timeZone: "Asia/Singapore",
   // });
+  moment.tz.setDefault("Asia/Singapore");
   const dateTitle = moment(DATE_TIME).format("DD/MM/YYYY");
 
   // const dateEntry = new Date(DATE_TIME).toLocaleDateString("en-SG", {
