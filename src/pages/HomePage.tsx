@@ -10,7 +10,9 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { getEntryDbIdAndUrl, postEntry } from "utils/apis/apis";
 
-function HomePage() {
+interface AppProps {}
+
+function HomePage(): React.ReactElement<AppProps> {
   const [startDate, setStartDate] = useState(new Date());
   const [isSubmited, setIsSubmited] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
